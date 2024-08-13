@@ -1,4 +1,4 @@
-#include "dlt.h"
+#include "dlt_version.h"
 
 const char * dlt_get_version(uint32_t * major, uint32_t * minor, uint32_t * patch)
 {

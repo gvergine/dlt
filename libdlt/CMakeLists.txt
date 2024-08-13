@@ -47,6 +47,10 @@ install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pc
 include(CTest)
 
 
+add_executable(dlt_test_version test/test_version.c)
+target_include_directories(dlt_test_version PRIVATE include)
+target_link_libraries(dlt_test_version dlt)
+
 add_executable(dlt_test_context test/test_context.c)
 target_include_directories(dlt_test_context PRIVATE include)
 target_link_libraries(dlt_test_context dlt)
@@ -55,12 +59,13 @@ add_executable(dlt_test test/test.c)
 target_include_directories(dlt_test PRIVATE include)
 target_link_libraries(dlt_test dlt)
 
+add_test(NAME test_version COMMAND dlt_test_version)
 add_test(NAME test_context COMMAND dlt_test_context)
 add_test(NAME test_on_testfile COMMAND dlt_test ${CMAKE_CURRENT_SOURCE_DIR}/test/testfile.dlt)
 add_test(NAME test_on_testfile_extended COMMAND dlt_test ${CMAKE_CURRENT_SOURCE_DIR}/test/testfile_extended.dlt)
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
     if(CMAKE_COMPILER_IS_GNUCXX)
-        setup_target_for_coverage_gcovr_html(NAME ${PROJECT_NAME}_coverage test_context coverage)
+        setup_target_for_coverage_gcovr_html(NAME ${PROJECT_NAME}_coverage test coverage)
     endif()
 endif()
