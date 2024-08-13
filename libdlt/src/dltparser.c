@@ -1,4 +1,4 @@
-#include "dltparser.h"
+#include "dlt.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -20,32 +20,33 @@ struct dlt_handle
     char last_error_description[DLT_MAX_ERR_DESC];
 };
 
-dlt_parser_context_t * dlt_create_context()
+dlt_context_t * dlt_create_context()
 {
-    dlt_parser_context_t * ctx = malloc(sizeof(dlt_parser_context_t));
-    ctx->handle = malloc(sizeof(dlt_parser_context_t));
+    dlt_context_t * ctx = malloc(sizeof(dlt_context_t));
+    ctx->handle = malloc(sizeof(struct dlt_handle));
     ctx->handle->last_error_code = 0;
     memset(ctx->handle->last_error_description,0,DLT_MAX_ERR_DESC);
     return ctx;
 }
 
-void dlt_parser_free_context(dlt_parser_context_t * ctx)
+void dlt_destroy_context(dlt_context_t * ctx)
 {
     free(ctx->handle);
     free(ctx);
 }
 
-int dlt_parser_errno(dlt_parser_context_t * ctx)
+int dlt_parser_errno(dlt_context_t * ctx)
 {
     return ctx->handle->last_error_code;
 }
 
-char* dlt_parser_error(dlt_parser_context_t * ctx)
+char* dlt_parser_error(dlt_context_t * ctx)
 {
     return ctx->handle->last_error_description;
 }
 
-int dlt_parser_read_message(dlt_parser_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
+
+int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
 {
     if (sizeof(dlt_storage_header_t) + sizeof(dlt_standard_header_t) > len) {
         //printf("will not be able to read even the headers - i have only %d left\n",len);

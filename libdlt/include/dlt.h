@@ -1,5 +1,5 @@
-#ifndef __LIBDLTPARSER_H__
-#define __LIBDLTPARSER_H__
+#ifndef __LIBDLT_H__
+#define __LIBDLT_H__
 
 #include <stddef.h>
 #include <stdint.h>
@@ -103,17 +103,17 @@ typedef struct dlt_message {
 
 typedef struct dlt_handle dlt_handle_t;
 
-typedef struct dlt_parser_context {
+typedef struct dlt_context {
     dlt_handle_t * handle;
     void * user;
-} dlt_parser_context_t;
+} dlt_context_t;
 
-dlt_parser_context_t * dlt_create_context();
-void dlt_parser_free_context(dlt_parser_context_t * ctx);
+dlt_context_t * dlt_create_context();
+void dlt_destroy_context(dlt_context_t * ctx);
 
-int dlt_parser_errno(dlt_parser_context_t * ctx);
-char* dlt_parser_error(dlt_parser_context_t * ctx);
+int dlt_errno(dlt_context_t * ctx);
+char* dlt_error(dlt_context_t * ctx);
 
-int dlt_parser_read_message(dlt_parser_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len);
+int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len);
 
-#endif /* __LIBDLTPARSER_H__ */
+#endif /* __LIBDLT_H__ */

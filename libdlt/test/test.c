@@ -1,19 +1,12 @@
-#include "dltparser.h"
+#include "dlt.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-       #include <sys/types.h>
-       #include <sys/stat.h>
-       #include <fcntl.h>
-/*
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-buffer: --------------------------------------
-read:   ------------------------------
-logs:   --------------------------
-
-
-*/
 void print_four_chars(uint8_t chars[4]) {
     printf("%c%c%c%c\t",*(chars),*(chars+1),*(chars+2),*(chars+3));
 }
@@ -69,7 +62,7 @@ void print_message(dlt_message_t * dlt_msg) {
 }
 
 // must return the position of the first unparsed byte
-int parse_read_buffer(dlt_parser_context_t * ctx, void * ptr, size_t maxlen)
+int parse_read_buffer(dlt_context_t * ctx, void * ptr, size_t maxlen)
 {
     int dlt_ret = 0;
     uint8_t * dlt_ptr = ptr;
@@ -109,7 +102,7 @@ int main(int argc, char* argv[]) {
     size_t total_bytes_read = 0;
     int previous_percent = 0;
     
-    dlt_parser_context_t * ctx = dlt_create_context();
+    dlt_context_t * ctx = dlt_create_context();
     ctx->user = 0;
 
     while ((bytes_read = read(fd, chunk_buffer + offset, CHUNK_BUF_LEN - offset)) > 0)
@@ -133,7 +126,7 @@ int main(int argc, char* argv[]) {
         offset = len;
     }
     printf("parsed %d messages",(int)ctx->user);
-    dlt_parser_free_context(ctx);
+    dlt_destroy_context(ctx);
     close(fd);
     free(chunk_buffer);
     return 0;
