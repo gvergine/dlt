@@ -13,8 +13,7 @@ static const uint8_t DLT_PATTERN_LEN = 4;
 
 
 
-
-int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
+size_t dlt_parser_read_message_partially(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
 {
     if (sizeof(dlt_storage_header_t) + sizeof(dlt_standard_header_t) > len) {
         REPORT_ERROR(1,Not enough buffer to read the headers);
@@ -26,11 +25,22 @@ int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt
     uint16_t message_len = be16toh(dlt_msg->standard_header->len);
 
 
-    int lenght_needed = sizeof(dlt_storage_header_t) + message_len;
+    size_t lenght_needed = sizeof(dlt_storage_header_t) + message_len;
     if (lenght_needed > len) {
         REPORT_ERROR(2,Not enough buffer to read it completely);
         return -1;
     }
+
+    return lenght_needed;
+
+}
+
+int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
+{
+    size_t lenght_needed = dlt_parser_read_message_partially(ctx, ptr, dlt_msg, len);
+    uint16_t message_len = be16toh(dlt_msg->standard_header->len);
+
+    /* At this point the function could return lenght_needed here, if the only purpose would be to fast-count the messages */
 
     size_t optional_std_header_fields_offset =  sizeof(dlt_msg->standard_header->htyp) + sizeof(dlt_msg->standard_header->mcnt) + sizeof(dlt_msg->standard_header->len);
     uint8_t * next_ptr = (uint8_t*)dlt_msg->standard_header + optional_std_header_fields_offset;
@@ -65,7 +75,7 @@ int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt
         uint8_t i = 0;
         for (i = 0; i < dlt_msg->extended_header->noar; i++)
         {
-            dlt_msg->payload_verbose.arguments[i].type_info.data = (uint32_t*)next_ptr;
+            dlt_msg->payload_verbose.arguments[i].type_info.data = *((uint32_t*)next_ptr);
             next_ptr += sizeof(uint32_t);
             dlt_msg->payload_verbose.arguments[i].data = next_ptr;
             
