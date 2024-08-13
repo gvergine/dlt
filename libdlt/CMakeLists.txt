@@ -18,7 +18,8 @@ set_target_properties(dlt PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
     PUBLIC_HEADER include/dlt.h)
 
-configure_file(${PROJECT_NAME}.pc.in ${PROJECT_NAME}.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/dlt.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dlt.h @ONLY)
 
 target_include_directories(dlt PRIVATE include)
 

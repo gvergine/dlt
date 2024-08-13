@@ -5,10 +5,10 @@
 #include <stdint.h>
 #include <endian.h>
 
-#define DLT_VERSION "1.0.0"
-#define DLT_VERSION_MAJOR 1
-#define DLT_VERSION_MINOR 0
-#define DLT_VERSION_PATCH 0
+#define DLT_VERSION "@PROJECT_VERSION@"
+#define DLT_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define DLT_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define DLT_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
 #pragma pack(push, 1)
 typedef struct dlt_timestamp {
