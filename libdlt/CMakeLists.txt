@@ -6,7 +6,7 @@ project(libdlt VERSION 1.0.0 DESCRIPTION "c library for dlt messages")
 
 include(GNUInstallDirs)
 
-add_library(dlt SHARED src/dltparser.c)
+add_library(dlt SHARED src/parser.c src/version.c src/context.c src/error.c)
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
     include(CodeCoverage)

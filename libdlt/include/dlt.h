@@ -1,5 +1,5 @@
-#ifndef __LIBDLT_H__
-#define __LIBDLT_H__
+#ifndef __DLT_H__
+#define __DLT_H__
 
 #include <stddef.h>
 #include <stdint.h>
@@ -124,4 +124,4 @@ const char * dlt_get_version(uint32_t * major, uint32_t * minor, uint32_t * patc
 
 int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len);
 
-#endif /* __LIBDLT_H__ */
+#endif /* __DLT_H__ */
