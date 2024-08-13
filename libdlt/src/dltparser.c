@@ -35,21 +35,28 @@ void dlt_destroy_context(dlt_context_t * ctx)
     free(ctx);
 }
 
-int dlt_parser_errno(dlt_context_t * ctx)
+int dlt_errno(dlt_context_t * ctx)
 {
     return ctx->handle->last_error_code;
 }
 
-char* dlt_parser_error(dlt_context_t * ctx)
+char* dlt_error(dlt_context_t * ctx)
 {
     return ctx->handle->last_error_description;
 }
 
+const char * dlt_get_version(uint32_t * major, uint32_t * minor, uint32_t * patch)
+{
+    if (major != 0) *major = DLT_VERSION_MAJOR;
+    if (minor != 0) *minor = DLT_VERSION_MINOR;
+    if (patch != 0) *patch = DLT_VERSION_PATCH;
+    return DLT_VERSION;
+}
 
 int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
 {
     if (sizeof(dlt_storage_header_t) + sizeof(dlt_standard_header_t) > len) {
-        //printf("will not be able to read even the headers - i have only %d left\n",len);
+        REPORT_ERROR(1,Not enough buffer to read the headers);
         return -1;
     }
 
@@ -61,8 +68,7 @@ int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt
 
     int lenght_needed = sizeof(dlt_storage_header_t) + message_len;
     if (lenght_needed > len) {
-       // printf("will not be able to read it all - i have only %d left, i need %d\n",len, lenght_needed);
-        //printf("first unread byte: %x\n",*((uint8_t*)ptr+lenght_needed));
+        REPORT_ERROR(2,Not enough buffer to read it completely);
         return -1;
     }
 
@@ -96,7 +102,8 @@ int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt
         next_ptr += sizeof(dlt_extended_header_t);
     }
 
-    if (dlt_msg->extended_header->msin.u.verb) // verbose payload
+
+    if (dlt_msg->standard_header->htyp.u.ueh && dlt_msg->extended_header->msin.u.verb) // verbose payload
     {
         uint8_t i = 0;
         for (i = 0; i < dlt_msg->extended_header->noar; i++)
@@ -108,7 +115,7 @@ int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt
 
         }
     }
-    else // non-verbose payload
+    else if (!dlt_msg->standard_header->htyp.u.ueh || !dlt_msg->extended_header->msin.u.verb) // non-verbose payload
     {
         //printf("/// %d ///\n",sizeof(dlt_extended_header_t));
         dlt_msg->payload_non_verbose.message_id = dlt_msg->standard_header->htyp.u.msbf ? be32toh(*(uint32_t*)next_ptr) : le32toh(*(uint32_t*)next_ptr);

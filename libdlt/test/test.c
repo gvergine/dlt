@@ -46,12 +46,12 @@ void print_message(dlt_message_t * dlt_msg) {
         print_four_chars(dlt_msg->extended_header->ctid);
     }
 
-    if (dlt_msg->extended_header->msin.u.verb) // verbose payload
+    if (dlt_msg->standard_header->htyp.u.ueh && dlt_msg->extended_header->msin.u.verb) // verbose payload
     {
         printf("%d\t",dlt_msg->extended_header->noar);
 
     }
-    else
+    else if (!dlt_msg->standard_header->htyp.u.ueh || !dlt_msg->extended_header->msin.u.verb) // non-verbose payload
     {
         printf("%d\t",dlt_msg->payload_non_verbose.message_id);
         print_byte_array(dlt_msg->payload_non_verbose.data, dlt_msg->payload_non_verbose.data_len);
@@ -78,10 +78,14 @@ int parse_read_buffer(dlt_context_t * ctx, void * ptr, size_t maxlen)
         if (offset == maxlen) break;
     }
 
+    if (dlt_ret < 0) {
+        fprintf(stderr,"dlt_parser_read_message fail - errno %d: %s\n",dlt_errno(ctx), dlt_error(ctx));
+    }
+ 
     return offset;
 }
 
-#define CHUNK_BUF_LEN 32*1048576 // 16 MiB
+#define CHUNK_BUF_LEN 1024 // 1 Kb
 
 int main(int argc, char* argv[]) {
 

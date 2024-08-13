@@ -12,6 +12,19 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
     include(CodeCoverage)
     append_coverage_compiler_flags_to_target(dlt)
 endif()
+if (CMAKE_BUILD_TYPE MATCHES "Release")
+    find_package(Doxygen)
+
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+
+    add_custom_target(
+    doc ALL
+    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating API documentation with Doxygen"
+    VERBATIM
+    )
+endif()
 
 set_target_properties(dlt PROPERTIES
     VERSION ${PROJECT_VERSION}
