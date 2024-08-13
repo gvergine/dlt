@@ -115,6 +115,9 @@ typedef struct dlt_context {
 dlt_context_t * dlt_create_context();
 void dlt_destroy_context(dlt_context_t * ctx);
 
+/**
+ * Returns the last dlt error
+ */
 int dlt_errno(dlt_context_t * ctx);
 char* dlt_error(dlt_context_t * ctx);
 const char * dlt_get_version(uint32_t * major, uint32_t * minor, uint32_t * patch);
