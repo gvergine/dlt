@@ -14,8 +14,6 @@ int main()
     assert(minor ==  DLT_VERSION_MINOR && "dlt_get_version minor != " "#DLT_VERSION_MINOR");
     assert(patch ==  DLT_VERSION_PATCH && "dlt_get_version patch != " "#DLT_VERSION_PATCH");
     
-
-
     dlt_context_t * ctx = dlt_create_context();
     assert (ctx != 0 && "ctx is null");
     assert (ctx->handle != 0 && "ctx->handle is null");

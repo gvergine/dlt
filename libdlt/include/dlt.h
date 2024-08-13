@@ -5,10 +5,7 @@
 #include <stdint.h>
 #include <endian.h>
 
-#define DLT_VERSION "1.0.0"
-#define DLT_VERSION_MAJOR 1
-#define DLT_VERSION_MINOR 0
-#define DLT_VERSION_PATCH 0
+#include "dlt_version.h"
 
 #pragma pack(push, 1)
 typedef struct dlt_timestamp {
@@ -121,6 +118,7 @@ void dlt_destroy_context(dlt_context_t * ctx);
 int dlt_errno(dlt_context_t * ctx);
 char* dlt_error(dlt_context_t * ctx);
 const char * dlt_get_version(uint32_t * major, uint32_t * minor, uint32_t * patch);
+
 
 int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len);
 

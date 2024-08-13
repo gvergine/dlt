@@ -29,10 +29,10 @@ endif()
 set_target_properties(dlt PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER include/dlt.h)
+    PUBLIC_HEADER "include/dlt.h include/dlt_version.h")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.in ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dlt.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dlt.h @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dlt_version.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dlt_version.h @ONLY)
 
 target_include_directories(dlt PRIVATE include)
 
