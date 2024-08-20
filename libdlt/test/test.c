@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
     }
 
     fstat(fd, &fd_stat);
-    printf("file size: %ld\n",fd_stat.st_size);
+    //printf("file size: %ld\n",fd_stat.st_size);
     size_t total_bytes_read = 0;
     int previous_percent = 0;
     
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
         int percent = (int)((total_bytes_read * 100.0f)/fd_stat.st_size);
         if (previous_percent < percent) 
         {
-            printf("%d%%\n",percent);
+            //printf("%d%%\n",percent);
             previous_percent = percent;
         }
 
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
         memmove(chunk_buffer, chunk_buffer+pos, len);
         offset = len;
     }
-    printf("parsed %d messages",(int)ctx->user);
+    //printf("parsed %d messages",(int)ctx->user);
     dlt_destroy_context(ctx);
     close(fd);
     free(chunk_buffer);

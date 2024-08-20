@@ -13,7 +13,7 @@ static const uint8_t DLT_PATTERN_LEN = 4;
 
 
 
-size_t dlt_parser_read_message_partially(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
+int dlt_parser_read_message_partially(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
 {
     if (sizeof(dlt_storage_header_t) + sizeof(dlt_standard_header_t) > len) {
         REPORT_ERROR(1,Not enough buffer to read the headers);
@@ -27,7 +27,7 @@ size_t dlt_parser_read_message_partially(dlt_context_t * ctx, void * ptr, dlt_me
 
     size_t lenght_needed = sizeof(dlt_storage_header_t) + message_len;
     if (lenght_needed > len) {
-        REPORT_ERROR(2,Not enough buffer to read it completely);
+        REPORT_ERROR(2,Not enough buffer to read the dlt message completely);
         return -1;
     }
 
@@ -37,7 +37,7 @@ size_t dlt_parser_read_message_partially(dlt_context_t * ctx, void * ptr, dlt_me
 
 int dlt_parser_read_message(dlt_context_t * ctx, void * ptr, dlt_message_t * dlt_msg, size_t len)
 {
-    size_t lenght_needed = dlt_parser_read_message_partially(ctx, ptr, dlt_msg, len);
+    int lenght_needed = dlt_parser_read_message_partially(ctx, ptr, dlt_msg, len);
     uint16_t message_len = be16toh(dlt_msg->standard_header->len);
 
     /* At this point the function could return lenght_needed here, if the only purpose would be to fast-count the messages */
